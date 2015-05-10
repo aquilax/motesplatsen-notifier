@@ -89,7 +89,7 @@
     });
     chrome.browserAction.setTitle({
       title: hint.join("\n")
-    })
+    });
     var changed = localStorage.unreadCount != total;
     localStorage.unreadCount = total;
     updateIcon();
