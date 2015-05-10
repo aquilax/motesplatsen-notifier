@@ -7,18 +7,14 @@
       chrome.browserAction.setBadgeText({text:"?"});
     } else {
       chrome.browserAction.setBadgeText({
-        text: localStorage.unreadCount != "0" ? localStorage.unreadCount : ""
+        text: localStorage.unreadCount != '0' ? localStorage.unreadCount + '': ''
       });
     }
   }
 
   function onWatchdog() {
     chrome.alarms.get('refresh', function(alarm) {
-      if (alarm) {
-        console.log('Refresh alarm exists. Yay.');
-      } else {
-        console.log('Refresh alarm doesn\'t exist!? ' +
-                    'Refreshing now and rescheduling.');
+      if (!alarm) {
         startRequest({scheduleRequest:true, showLoadingAnimation:false});
       }
     });
@@ -34,7 +30,6 @@
   }
 
   function fetchStatus(onSuccess, onError) {
-    debugger;
     var xhr = new XMLHttpRequest();
     var abortTimerId = window.setTimeout(function() {
       xhr.abort();  // synchronously calls onreadystatechange
@@ -65,7 +60,7 @@
 
         if (xhr.responseText) {
           result = JSON.parse(xhr.responseText);
-          handleSuccess(result);
+          return handleSuccess(result);
         }
         handleError();
       };
@@ -84,16 +79,29 @@
   }
 
   function updateCount(data) {
-    var changed = localStorage.unreadCount != count;
-    localStorage.unreadCount = count;
+    var total = 0;
+    var hint = [];
+    Object.keys(data.menu).forEach(function(key) {
+      if (key.indexOf('new') === 0) {
+        total += parseInt(data.menu[key], 10);
+        hint.push(key.substring(3) + ': ' + data.menu[key]);
+      }
+    });
+    chrome.browserAction.setTitle({
+      title: hint.join("\n")
+    })
+    var changed = localStorage.unreadCount != total;
+    localStorage.unreadCount = total;
     updateIcon();
-    if (changed)
-      animateFlip();
+    if (changed) {
+      // Notify
+    }
   }
 
   function startRequest(params) {
-    if (params && params.scheduleRequest) scheduleRequest();
-
+    if (params && params.scheduleRequest) {
+      scheduleRequest();
+    }
     fetchStatus(
       function(data) {
         updateCount(data);
@@ -104,5 +112,25 @@
       }
     );
   }
-  startRequest({scheduleRequest:false, showLoadingAnimation:false});
+
+  function onInit() {
+    localStorage.requestFailureCount = 0;
+    startRequest({scheduleRequest:true, showLoadingAnimation:true});
+    chrome.alarms.create('watchdog', {periodInMinutes:5});
+  }
+
+  function onAlarm(alarm) {
+    if (alarm && alarm.name == 'watchdog') {
+      onWatchdog();
+    } else {
+      startRequest({scheduleRequest:true, showLoadingAnimation:false});
+    }
+  }
+
+  chrome.runtime.onInstalled.addListener(onInit);
+  chrome.alarms.onAlarm.addListener(onAlarm);
+  chrome.runtime.onStartup.addListener(function() {
+    startRequest({scheduleRequest:false, showLoadingAnimation:false});
+    updateIcon();
+  });
 })(chrome || {});
