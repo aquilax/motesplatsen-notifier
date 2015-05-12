@@ -1,11 +1,8 @@
 (function(document){
 
 	function sendMessage(message, callback) {
-		chrome.runtime.sendMessage(message, function(response) {
-			if (callback) {
-				return callback(response)
-			}
-		});
+		callback = callback || function(response){};
+		chrome.runtime.sendMessage(message, callback);
 	}
 
 	function sendUpdate(data) {
@@ -37,10 +34,12 @@
 	}
 
 	function updateSettingsOnPage(settings) {
-		var checkboxes = document.getElementsByTagName('input');
-		[].forEach.call(checkboxes, function(checkbox) {
-			checkbox.checked = settings[checkbox.dataset.name][checkbox.dataset.type];
-		});
+		window.setTimeout(function(){
+			var checkboxes = document.getElementsByTagName('input');
+			[].forEach.call(checkboxes, function(checkbox) {
+				checkbox.checked = settings[checkbox.dataset.name][checkbox.dataset.type];
+			});
+		}, 1000);
 	}
 
 	function translate() {
