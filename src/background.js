@@ -28,7 +28,6 @@
 			notify: false
 		}
 	};
-	var settings = {};
 
 	var rpc = {
 		getSettings: function () {
@@ -36,6 +35,7 @@
 		},
 
 		updateSettings: function (update) {
+			var settings = loadSettings();
 			settings[update.name][update.type] = update.value;
 			saveSettings(settings);
 		}
@@ -163,7 +163,6 @@
 	}
 
 	function onInit() {
-		setings = loadSettings();
 		localStorage.requestFailureCount = 0;
 		startRequest({scheduleRequest:true, showLoadingAnimation:true});
 		chrome.alarms.create('watchdog', {periodInMinutes:5});
