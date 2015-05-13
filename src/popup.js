@@ -33,13 +33,31 @@
 		}, updateSettingsOnPage);
 	}
 
+	function getLastCount() {
+		sendMessage({
+			exec: 'getLastCount',
+			args: []
+		}, updateLastCountOnPage);
+	}
+
 	function updateSettingsOnPage(settings) {
 		window.setTimeout(function(){
 			var checkboxes = document.getElementsByTagName('input');
 			[].forEach.call(checkboxes, function(checkbox) {
 				checkbox.checked = settings[checkbox.dataset.name][checkbox.dataset.type];
 			});
-		}, 1000);
+		}, 1);
+	}
+
+	
+	function updateLastCountOnPage(countObj) {
+		window.setTimeout(function(){
+			Object.keys(countObj).forEach(function(key) {
+				var el = document.getElementById(key);
+				var value = countObj[key];
+				el.innerHTML = countObj[key];
+			});
+		}, 1);
 	}
 
 	function translate() {
@@ -51,6 +69,7 @@
 
 	document.addEventListener("DOMContentLoaded", function() {
 		loadSettings();
+		getLastCount();
 		translate();
 		init();
 	});

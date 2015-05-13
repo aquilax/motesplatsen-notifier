@@ -3,53 +3,67 @@
 <head>
 <title></title>
 <script type="text/javascript" src="popup.js"></script>
+<style type="text/css">
+	td, th {
+		border-bottom: 1px solid #cecece;
+	}
+	.ar {
+		text-align: right;
+	}
+	.al {
+		text-align: left;
+	}
+	.b {
+		font-weight: bold;
+	}
+</style>
 </head>
 <body>
-	<table style="width: 100%" border="1">
+	<table style="width: 100%">
 		<thead>
 			<tr>
 				<th></th>
 				<th class="translate">Now</th>
 				<th class="translate">Count</th>
-				<th class="translate">Notify</th>
+				<!-- <th class="translate">Notify</th> -->
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<th class="translate">Dates</th>
-				<td id="newDates"></th>
+				<th class="translate al">Dates</th>
+				<td id="newDates" class="ar b"></th>
 				<td><input type="checkbox" data-type="count" data-name="newDates"/></td>
-				<td><input type="checkbox" data-type="notify" data-name="newDates"/></td>
+				<!-- <td><input type="checkbox" data-type="notify" data-name="newDates"/></td> -->
 			<tr>
 			<tr>
-				<th class="translate">Matches</th>
-				<td id="newMatches"></th>
+				<th class="translate al">Matches</th>
+				<td id="newMatches" class="ar b"></th>
 				<td><input type="checkbox" data-type="count" data-name="newMatches"/></td>
-				<td><input type="checkbox" data-type="notify" data-name="newMatches"/></td>
+				<!-- <td><input type="checkbox" data-type="notify" data-name="newMatches"/></td> -->
 			<tr>
 			<tr>
-				<th class="translate">Members</th>
-				<td id="newMembers"></th>
+				<th class="translate al">Members</th>
+				<td id="newMembers" class="ar b" b></th>
 				<td><input type="checkbox" data-type="count" data-name="newMembers"/></td>
-				<td><input type="checkbox" data-type="notify" data-name="newMembers"/></td>
+				<!-- <td><input type="checkbox" data-type="notify" data-name="newMembers"/></td> -->
 			<tr>
 			<tr>
-				<th class="translate">Messages</th>
-				<td id="newMessages"></th>
+				<th class="translate al">Messages</th>
+				<td id="newMessages" class="ar b"></th>
 				<td><input type="checkbox" data-type="count" data-name="newMessages"/></td>
-				<td><input type="checkbox" data-type="notify" data-name="newMessages"/></td>
+				<!-- <td><input type="checkbox" data-type="notify" data-name="newMessages"/></td> -->
 			<tr>
 			<tr>
-				<th class="translate">Visitors</th>
-				<td id="newVisitors"></th>
+				<th class="translate al">Visitors</th>
+				<td id="newVisitors" class="ar b" b></th>
 				<td><input type="checkbox" data-type="count" data-name="newVisitors"/></td>
-				<td><input type="checkbox" data-type="notify" data-name="newVisitors"/></td>
+				<!-- <td><input type="checkbox" data-type="notify" data-name="newVisitors"/></td> -->
 			<tr>
 			<tr>
-				<th class="translate">Photos</th>
-				<td id="newPhotos"></th>
+				<th class="translate al">Photos</th>
+				<td id="newPhotos" class="ar b"></th>
 				<td><input type="checkbox" data-type="count" data-name="newPhotos"/></td>
-				<td><input type="checkbox" data-type="notify" data-name="newPhotos"/></td>
+				<!-- <td><input type="checkbox" data-type="notify" data-name="newPhotos"/></td> -->
 			<tr>
 		</tbody>
 	</table>

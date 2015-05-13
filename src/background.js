@@ -28,6 +28,14 @@
 			notify: false
 		}
 	};
+	var lastCount = {
+		newDates: '?',
+		newMatches: '?',
+		newMembers: '?',
+		newMessages: '?',
+		newVisitors: '?',
+		newPhotos: '?'
+	};
 
 	var rpc = {
 		getSettings: function () {
@@ -38,7 +46,14 @@
 			var settings = loadSettings();
 			settings[update.name][update.type] = update.value;
 			saveSettings(settings);
+		},
+		getLastCount: function() {
+			return gLastCount();
 		}
+	};
+
+	function gLastCount() {
+		return lastCount;
 	}
 
 	function loadSettings(){
@@ -130,9 +145,13 @@
 	function updateCount(data) {
 		var total = 0;
 		var hint = [];
+		var settings = loadSettings();
 		Object.keys(data.menu).forEach(function(key) {
 			if (key.indexOf('new') === 0) {
-				total += parseInt(data.menu[key], 10);
+				if (settings[key].count){
+					total += parseInt(data.menu[key], 10);
+				}
+				lastCount[key] = data.menu[key];
 				hint.push(key.substring(3) + ': ' + data.menu[key]);
 			}
 		});
