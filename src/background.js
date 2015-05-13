@@ -1,3 +1,12 @@
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-115818-45', 'auto');
+ga('set', 'checkProtocolTask', function(){});
+ga('send', 'pageview', '/extension.html');
+
 (function(chrome){
 
 	var requestTimeout = 1000 * 4;
@@ -39,6 +48,7 @@
 
 	var rpc = {
 		getSettings: function () {
+			ga('send', 'event', 'popup', 'window', 'open');
 			return loadSettings();
 		},
 
@@ -51,6 +61,7 @@
 			return loadLastCount();
 		},
 		openTab: function(url) {
+			ga('send', 'event', 'popup', 'url', 'open');
 			chrome.tabs.create({
 				url: url
 			});
@@ -112,6 +123,7 @@
 		}, requestTimeout);
 
 		function handleSuccess(result) {
+			ga('send', 'event', 'feed', 'fetch', 'success');
 			localStorage.requestFailureCount = 0;
 			window.clearTimeout(abortTimerId);
 			if (onSuccess) {
@@ -122,6 +134,8 @@
 		var invokedErrorCallback = false;
 		function handleError() {
 			++localStorage.requestFailureCount;
+			ga('send', 'event', 'feed', 'fetch', 'error',
+				localStorage.requestFailureCount);
 			window.clearTimeout(abortTimerId);
 			if (onError && !invokedErrorCallback)
 				onError();
