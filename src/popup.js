@@ -23,6 +23,14 @@
 				};
 				return sendUpdate(update);
 			}
+			if (ev.target && ev.target.tagName == 'A') {
+				event.preventDefault();
+				sendMessage({
+					exec: 'openTab',
+					args: [ev.target.href]
+				});
+				return false;
+			}
 		});
 	}
 

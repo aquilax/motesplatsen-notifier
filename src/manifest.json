@@ -18,6 +18,7 @@
   },
   "name": "__MSG_mp_name__",
   "permissions": [
+    "tabs",
     "alarms",
     "*://*.motesplatsen.se/"
    ]
