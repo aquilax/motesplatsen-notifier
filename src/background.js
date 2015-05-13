@@ -28,7 +28,7 @@
 			notify: false
 		}
 	};
-	var lastCount = {
+	var defaultLastCount = {
 		newDates: '?',
 		newMatches: '?',
 		newMembers: '?',
@@ -48,12 +48,19 @@
 			saveSettings(settings);
 		},
 		getLastCount: function() {
-			return gLastCount();
+			return loadLastCount();
 		}
 	};
 
-	function gLastCount() {
-		return lastCount;
+	function loadLastCount() {
+		if (!localStorage.hasOwnProperty('lastCount')) {
+			return defaultLastCount;
+		}
+		return JSON.parse(localStorage.lastCount);
+	}
+
+	function saveLastCount(lastCount) {
+		localStorage.lastCount = JSON.stringify(lastCount);
 	}
 
 	function loadSettings(){
@@ -146,6 +153,7 @@
 		var total = 0;
 		var hint = [];
 		var settings = loadSettings();
+		var lastCount = loadLastCount();
 		Object.keys(data.menu).forEach(function(key) {
 			if (key.indexOf('new') === 0) {
 				if (settings[key].count){
@@ -155,6 +163,7 @@
 				hint.push(key.substring(3) + ': ' + data.menu[key]);
 			}
 		});
+		saveLastCount(lastCount);
 		chrome.browserAction.setTitle({
 			title: hint.join("\n")
 		});
