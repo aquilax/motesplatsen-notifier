@@ -9,6 +9,9 @@ ga('send', 'pageview', '/extension.html');
 
 (function(chrome){
 
+	var pollIntervalMin = 1;
+	var pollIntervalMax = 60;
+
 	var requestTimeout = 1000 * 4;
 	var self = this;
 	var defaultSettings = {
@@ -61,9 +64,17 @@ ga('send', 'pageview', '/extension.html');
 			return loadLastCount();
 		},
 		openTab: function(url) {
-			ga('send', 'event', 'popup', 'url', 'open');
-			chrome.tabs.create({
-				url: url
+			chrome.permissions.request({
+				permissions: ['tabs']
+			}, function(granted) {
+				if (granted) {
+					ga('send', 'event', 'popup', 'url', 'open', 1);
+					chrome.tabs.create({
+						url: url
+					});
+					return;
+				}
+				ga('send', 'event', 'popup', 'url', 'open', 0);
 			});
 		}
 	};
@@ -108,7 +119,11 @@ ga('send', 'pageview', '/extension.html');
 	}
 
 	function scheduleRequest() {
-		delay = 1;
+		var randomness = Math.random() * 2;
+		var exponent = Math.pow(2, localStorage.requestFailureCount || 0);
+		var multiplier = Math.max(randomness * exponent, 1);
+		var delay = Math.min(multiplier * pollIntervalMin, pollIntervalMax);
+		delay = Math.round(delay);
 		chrome.alarms.create('refresh', {periodInMinutes: delay});
 	}
 
@@ -137,8 +152,9 @@ ga('send', 'pageview', '/extension.html');
 			ga('send', 'event', 'feed', 'fetch', 'error',
 				localStorage.requestFailureCount);
 			window.clearTimeout(abortTimerId);
-			if (onError && !invokedErrorCallback)
+			if (onError && !invokedErrorCallback) {
 				onError();
+			}
 			invokedErrorCallback = true;
 		}
 
@@ -150,7 +166,9 @@ ga('send', 'pageview', '/extension.html');
 
 				if (xhr.responseText) {
 					result = JSON.parse(xhr.responseText);
-					return handleSuccess(result);
+					if (result.hasOwnProperty('menu')) {
+						return handleSuccess(result);
+					}
 				}
 				handleError();
 			};
@@ -204,6 +222,7 @@ ga('send', 'pageview', '/extension.html');
 			},
 			function() {
 				delete localStorage.unreadCount;
+				saveLastCount(defaultLastCount);
 				updateIcon();
 			}
 		);
