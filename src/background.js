@@ -193,7 +193,7 @@ ga('send', 'pageview', '/extension.html');
 		var lastCount = loadLastCount();
 		Object.keys(data.menu).forEach(function(key) {
 			if (key.indexOf('new') === 0) {
-				if (settings[key].count){
+				if (settings[key] && settings[key].count){
 					total += parseInt(data.menu[key], 10);
 				}
 				lastCount[key] = data.menu[key];
